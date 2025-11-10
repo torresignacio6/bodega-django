@@ -5,7 +5,6 @@ from .models import Docente, Material, Usuario, Prestamo, DetallePrestamo
 from .forms import DocenteForm, MaterialForm, UsuarioForm, PrestamoForm
 from .decorators import rol_requerido
 
-
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -27,7 +26,6 @@ def logout_view(request):
 @login_required
 def home(request):
     return render(request, 'home.html')
-
 
 @rol_requerido('ADMIN')
 def docente_list(request):
@@ -67,7 +65,6 @@ def docente_delete(request, pk):
         docente.delete()
         return redirect('docente_list')
     return render(request, 'docente_confirm_delete.html', {'docente': docente})
-
 
 @rol_requerido('ADMIN')
 def material_list(request):
@@ -157,7 +154,6 @@ def admin_user_delete(request, pk):
         user.delete()
         return redirect('admin_user_list')
     return render(request, 'admin_user_confirm_delete.html', {'usuario': user})
-
 
 @rol_requerido('ADMIN')
 def panol_user_list(request):
@@ -254,7 +250,12 @@ def prestamo_list(request):
 
 @login_required
 def admin_prestamos_list(request):
-    prestamos = Prestamo.objects.all().order_by('-fecha')
+    prestamos = (
+        Prestamo.objects
+        .select_related('docente', 'panol')
+        .prefetch_related('detalles__material')
+        .order_by('-fecha')
+    )
     return render(request, 'admin_prestamos_list.html', {'prestamos': prestamos})
 
 

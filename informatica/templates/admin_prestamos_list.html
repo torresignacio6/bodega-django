@@ -12,6 +12,7 @@
                 <th>Docente</th>
                 <th>Pañol</th>
                 <th>Fecha</th>
+                <th>Detalles</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -23,6 +24,13 @@
                 <td>{{ p.panol.username }}</td>
                 <td>{{ p.fecha|date:"d-m-Y H:i" }}</td>
                 <td>
+                    {% for detalle in p.detalles.all %}
+                        {{ detalle.material.nombre }} ({{ detalle.cantidad }})<br>
+                    {% empty %}
+                        <em>Sin detalles</em>
+                    {% endfor %}
+                </td>
+                <td>
                     <a href="{% url 'admin_prestamo_delete' p.pk %}" 
                        class="btn btn-sm btn-danger"
                        onclick="return confirm('¿Eliminar este préstamo?')">
@@ -31,7 +39,7 @@
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="5">No hay préstamos registrados.</td></tr>
+            <tr><td colspan="6">No hay préstamos registrados.</td></tr>
             {% endfor %}
         </tbody>
     </table>

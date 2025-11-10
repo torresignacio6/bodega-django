@@ -11,54 +11,47 @@
     </div>
 
     {% if mensaje %}
-        <div class="alert alert-success mt-2 py-2">
-            ✅ {{ mensaje }}
-        </div>
+        <div class="alert alert-success mt-2 py-2">✅ {{ mensaje }}</div>
     {% endif %}
     {% if error %}
-        <div class="alert alert-danger mt-2 py-2">
-            ⚠️ {{ error }}
-        </div>
+        <div class="alert alert-danger mt-2 py-2">⚠️ {{ error }}</div>
     {% endif %}
 
     <form method="post" class="mt-2 p-3">
         {% csrf_token %}
-        {{ form.as_p }}
-
         <div class="mb-3">
-            <label for="materialSelect" class="form-label text-white">Selecciona material</label>
-            <select id="materialSelect" class="form-select">
-                <option value="">-- Selecciona --</option>
-                {% for m in materiales %}
-                    <option value="{{ m.id }}" data-stock="{{ m.stock }}">{{ m.nombre }}</option>
-                {% endfor %}
-            </select>
+            {{ form.as_p }}
         </div>
-
-        <div id="stockInfo" class="alert alert-info d-none"></div>
-
         <div class="d-flex flex-wrap gap-2 mt-3">
-            <button class="btn btn-success px-4" type="submit">
-                💾 Registrar
-            </button>
-            <a class="btn btn-outline-light px-4" href="{% url 'prestamo_list' %}">
-                Ver préstamos
-            </a>
+            <button class="btn btn-success px-4" type="submit">💾 Registrar</button>
+            <a class="btn btn-outline-light px-4" href="{% url 'prestamo_list' %}">Ver préstamos</a>
         </div>
     </form>
-</div>
 
-<script>
-document.getElementById('materialSelect').addEventListener('change', function() {
-    const selected = this.options[this.selectedIndex];
-    const stock = selected.getAttribute('data-stock');
-    const info = document.getElementById('stockInfo');
-    if (stock) {
-        info.textContent = `Stock disponible: ${stock}`;
-        info.classList.remove('d-none');
-    } else {
-        info.classList.add('d-none');
-    }
-});
-</script>
+    <hr class="my-4" style="border-color: rgba(148,163,184,0.3);">
+
+    <div class="mt-4">
+        <h4 class="text-accent mb-3">Stock actual de materiales</h4>
+        <table class="table table-sm table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in materiales %}
+                    <tr>
+                        <td>{{ m.id }}</td>
+                        <td>{{ m.nombre }}</td>
+                        <td>{{ m.stock }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3">No hay materiales registrados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
