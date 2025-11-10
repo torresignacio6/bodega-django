@@ -2,38 +2,46 @@
 {% block title %}Registrar Préstamo{% endblock %}
 
 {% block content %}
-<div class="d-flex flex-column gap-3">
-    <div>
-        <h2 class="text-accent fw-semibold mb-2">Registrar préstamo</h2>
-        <p class="card-main-lead mb-0">
-            Completa los campos para registrar un nuevo préstamo de materiales.
-        </p>
+<h2>Registrar Préstamo</h2>
+
+{% if mensaje %}
+    <div class="alert alert-success">{{ mensaje }}</div>
+{% endif %}
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <div class="mb-3">
+        <label for="material">Material:</label>
+        <select id="material" name="material" class="form-control">
+            <option value="">Seleccione un material...</option>
+            {% for m in materiales %}
+            <option value="{{ m.id }}" data-stock="{{ m.stock }}">{{ m.nombre }}</option>
+            {% endfor %}
+        </select>
+        <small id="stock-info" class="form-text text-muted"></small>
     </div>
 
-    {% if mensaje %}
-        <div class="alert alert-success mt-2 py-2">
-            ✅ {{ mensaje }}
-        </div>
-    {% endif %}
-    {% if error %}
-        <div class="alert alert-danger mt-2 py-2">
-            ⚠️ {{ error }}
-        </div>
-    {% endif %}
+    <button class="btn btn-success" type="submit">Registrar</button>
+    <a class="btn btn-secondary" href="{% url 'prestamo_list' %}">Ver préstamos</a>
+</form>
 
-    <form method="post" class="mt-2 p-3">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.as_p }}
-        </div>
-        <div class="d-flex flex-wrap gap-2 mt-3">
-            <button class="btn btn-success px-4" type="submit">
-                💾 Registrar
-            </button>
-            <a class="btn btn-outline-light px-4" href="{% url 'prestamo_list' %}">
-                Ver préstamos
-            </a>
-        </div>
-    </form>
-</div>
+<script>
+    const materialSelect = document.getElementById('material');
+    const stockInfo = document.getElementById('stock-info');
+
+    materialSelect.addEventListener('change', () => {
+        const selected = materialSelect.options[materialSelect.selectedIndex];
+        const stock = selected.getAttribute('data-stock');
+        if (stock) {
+            stockInfo.textContent = `Stock disponible: ${stock} unidades.`;
+        } else {
+            stockInfo.textContent = '';
+        }
+    });
+</script>
 {% endblock %}

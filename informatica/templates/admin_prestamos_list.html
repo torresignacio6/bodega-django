@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Gestión de Préstamos{% endblock %}
+
+{% block content %}
+<h2>Listado de Préstamos</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Docente</th>
+            <th>Materiales</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for p in prestamos %}
+        <tr>
+            <td>{{ p.fecha|date:"d-m-Y H:i" }}</td>
+            <td>{{ p.docente.nombre }}</td>
+            <td>
+                <ul>
+                {% for d in p.detalles.all %}
+                    <li>{{ d.material.nombre }} ({{ d.cantidad }})</li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <a class="btn btn-danger btn-sm" href="{% url 'admin_prestamo_delete' p.pk %}">Eliminar</a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="4">No hay préstamos registrados.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

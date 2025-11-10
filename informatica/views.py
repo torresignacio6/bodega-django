@@ -253,4 +253,19 @@ def prestamo_list(request):
     )
     return render(request, 'prestamo_list.html', {'prestamos': prestamos})
 
+def registrar_prestamo(request):
+    materiales = Material.objects.filter(activo=True)
+    return render(request, 'registrar_prestamo.html', {'form': form, 'materiales': materiales})
+
+@login_required
+def admin_prestamos_list(request):
+    prestamos = Prestamo.objects.all().order_by('-fecha')
+    return render(request, 'admin_prestamos_list.html', {'prestamos': prestamos})
+
+@login_required
+def admin_prestamo_delete(request, pk):
+    prestamo = get_object_or_404(Prestamo, pk=pk)
+    prestamo.delete()
+    return redirect('admin_prestamos_list')
+
 

@@ -25,4 +25,6 @@ urlpatterns = [
     path('panoles/<int:pk>/eliminar/', views.panol_user_delete, name='panol_user_delete'),
     path('prestamos/', views.prestamo_list, name='prestamo_list'),
     path('prestamos/nuevo/', views.registrar_prestamo, name='registrar_prestamo'),
+    path('admin/prestamos/', views.admin_prestamos_list, name='admin_prestamos_list'),
+    path('admin/prestamos/<int:pk>/eliminar/', views.admin_prestamo_delete, name='admin_prestamo_delete'),
 ]
