@@ -13,9 +13,22 @@ class MaterialForm(forms.ModelForm):
 
 
 class UsuarioForm(forms.ModelForm):
+    password = forms.CharField(
+        label="Contraseña",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'is_active']
+        fields = ['username', 'first_name', 'last_name', 'password', 'rol']
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data["password"])
+        if commit:
+            user.save()
+        return user
 
 class PrestamoForm(forms.Form):
     docente = forms.ModelChoiceField(

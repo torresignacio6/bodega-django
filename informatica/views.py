@@ -5,6 +5,8 @@ from .models import Docente, Material, Usuario, Prestamo, DetallePrestamo
 from .forms import DocenteForm, MaterialForm, UsuarioForm, PrestamoForm
 from .decorators import rol_requerido
 
+
+# ---------- LOGIN / LOGOUT ----------
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -27,6 +29,8 @@ def logout_view(request):
 def home(request):
     return render(request, 'home.html')
 
+
+# ---------- CRUD DOCENTES ----------
 @rol_requerido('ADMIN')
 def docente_list(request):
     docentes = Docente.objects.all()
@@ -66,6 +70,8 @@ def docente_delete(request, pk):
         return redirect('docente_list')
     return render(request, 'docente_confirm_delete.html', {'docente': docente})
 
+
+# ---------- CRUD MATERIALES ----------
 @rol_requerido('ADMIN')
 def material_list(request):
     materiales = Material.objects.all()
@@ -105,6 +111,8 @@ def material_delete(request, pk):
         return redirect('material_list')
     return render(request, 'material_confirm_delete.html', {'material': material})
 
+
+# ---------- CRUD ADMINISTRADORES ----------
 @rol_requerido('ADMIN')
 def admin_user_list(request):
     usuarios = Usuario.objects.filter(rol='ADMIN')
@@ -118,14 +126,13 @@ def admin_user_create(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.rol = 'ADMIN'
-            user.set_password('123456')
             user.save()
             return redirect('admin_user_list')
     else:
         form = UsuarioForm()
     return render(request, 'admin_user_form.html', {
         'form': form,
-        'titulo': 'Crear administrador (password por defecto: 123456)'
+        'titulo': 'Crear administrador'
     })
 
 
@@ -155,6 +162,8 @@ def admin_user_delete(request, pk):
         return redirect('admin_user_list')
     return render(request, 'admin_user_confirm_delete.html', {'usuario': user})
 
+
+# ---------- CRUD USUARIOS PAÑOL ----------
 @rol_requerido('ADMIN')
 def panol_user_list(request):
     usuarios = Usuario.objects.filter(rol='PANOL')
@@ -168,14 +177,13 @@ def panol_user_create(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.rol = 'PANOL'
-            user.set_password('123456')
             user.save()
             return redirect('panol_user_list')
     else:
         form = UsuarioForm()
     return render(request, 'panol_user_form.html', {
         'form': form,
-        'titulo': 'Crear usuario de pañol (password por defecto: 123456)'
+        'titulo': 'Crear usuario de pañol'
     })
 
 
@@ -205,6 +213,8 @@ def panol_user_delete(request, pk):
         return redirect('panol_user_list')
     return render(request, 'panol_user_confirm_delete.html', {'usuario': user})
 
+
+# ---------- REGISTRO Y GESTIÓN DE PRÉSTAMOS ----------
 @rol_requerido('PANOL')
 def registrar_prestamo(request):
     materiales = Material.objects.filter(activo=True)
@@ -247,6 +257,7 @@ def prestamo_list(request):
         .order_by('-fecha')
     )
     return render(request, 'prestamo_list.html', {'prestamos': prestamos})
+
 
 @login_required
 def admin_prestamos_list(request):
