@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="card-main-header">
+    <div>
+        <h1 class="text-accent fw-semibold mb-1">Bienvenido a la Bodega</h1>
+        {% if user.rol == 'ADMIN' %}
+            <p class="card-main-lead">
+                Estás en el panel de <span class="text-accent-2">Administración</span>. 
+                Desde aquí gestionas docentes, materiales y usuarios del sistema.
+            </p>
+        {% elif user.rol == 'PANOL' %}
+            <p class="card-main-lead">
+                Estás en el panel de <span class="text-accent-2">Pañol</span>. 
+                Aquí registras préstamos y consultas el historial de movimientos.
+            </p>
+        {% else %}
+            <p class="card-main-lead">
+                Tu usuario aún no tiene un rol definido. Contacta al administrador del sistema.
+            </p>
+        {% endif %}
+    </div>
+
+    {% if user.rol %}
+        <div class="badge-role">
+            Rol actual: <strong>{{ user.get_rol_display }}</strong>
+        </div>
+    {% endif %}
+</div>
+
+<hr class="mb-3" style="border-color: rgba(148,163,184,0.4);">
+
+{% if user.rol == 'ADMIN' %}
+    <h5 class="mb-2 text-muted">Accesos rápidos</h5>
+    <div class="menu-grid">
+        <a href="{% url 'docente_list' %}" class="tile-btn">
+            <div class="tile-icon">👨‍🏫</div>
+            <div class="tile-title">Docentes</div>
+            <div class="tile-sub">Crear, editar y administrar docentes.</div>
+            <span class="pill-tag">Gestión académica</span>
+        </a>
+
+        <a href="{% url 'material_list' %}" class="tile-btn">
+            <div class="tile-icon">⚙️</div>
+            <div class="tile-title">Materiales</div>
+            <div class="tile-sub">Control de stock y estado de los recursos.</div>
+            <span class="pill-tag">Inventario</span>
+        </a>
+
+        <a href="{% url 'admin_user_list' %}" class="tile-btn">
+            <div class="tile-icon">🧑‍💼</div>
+            <div class="tile-title">Administradores</div>
+            <div class="tile-sub">Gestiona quién administra el sistema.</div>
+            <span class="pill-tag">Usuarios · Admin</span>
+        </a>
+
+        <a href="{% url 'panol_user_list' %}" class="tile-btn">
+            <div class="tile-icon">🔧</div>
+            <div class="tile-title">Usuarios de pañol</div>
+            <div class="tile-sub">Controla quién puede registrar préstamos.</div>
+            <span class="pill-tag">Usuarios · Pañol</span>
+        </a>
+    </div>
+
+{% elif user.rol == 'PANOL' %}
+    <h5 class="mb-2 text-muted">Accesos rápidos</h5>
+    <div class="menu-grid">
+        <a href="{% url 'registrar_prestamo' %}" class="tile-btn">
+            <div class="tile-icon">➕</div>
+            <div class="tile-title">Registrar préstamo</div>
+            <div class="tile-sub">Entrega de materiales a docentes con control de stock.</div>
+            <span class="pill-tag">Operación</span>
+        </a>
+
+        <a href="{% url 'prestamo_list' %}" class="tile-btn">
+            <div class="tile-icon">📄</div>
+            <div class="tile-title">Ver préstamos</div>
+            <div class="tile-sub">Consulta el historial de préstamos realizados.</div>
+            <span class="pill-tag">Historial</span>
+        </a>
+    </div>
+
+{% else %}
+    <div class="alert alert-warning mt-3">
+        No tienes un rol asignado actualmente. Inicia sesión como administrador y asigna un rol desde la gestión de usuarios.
+    </div>
+{% endif %}
+{% endblock %}

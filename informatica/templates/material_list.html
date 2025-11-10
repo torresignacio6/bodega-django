@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Materiales{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="text-accent fw-semibold mb-1">Materiales</h2>
+        <p class="card-main-lead mb-0">Control y gestión de materiales del laboratorio.</p>
+    </div>
+    <a class="btn btn-success px-4" href="{% url 'material_create' %}">
+        ➕ Nuevo material
+    </a>
+</div>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Activo</th>
+            <th scope="col" class="text-center">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for m in materiales %}
+        <tr>
+            <td class="fw-semibold">{{ m.nombre }}</td>
+            <td class="text-muted">{{ m.descripcion|default:"—" }}</td>
+            <td>{{ m.stock }}</td>
+            <td>
+                {% if m.activo %}
+                    <span class="badge bg-success">Sí</span>
+                {% else %}
+                    <span class="badge bg-danger">No</span>
+                {% endif %}
+            </td>
+            <td class="text-center">
+                <div class="d-flex justify-content-center gap-2">
+                    <a class="btn btn-sm btn-outline-warning px-3" href="{% url 'material_update' m.pk %}">
+                        ✏️ Editar
+                    </a>
+                    <a class="btn btn-sm btn-outline-danger px-3" href="{% url 'material_delete' m.pk %}">
+                        🗑️ Eliminar
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted py-3">
+                No hay materiales registrados.
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar administrador{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3">
+    <div>
+        <h2 class="mb-1 text-danger fw-semibold">Eliminar administrador</h2>
+        <p class="card-main-lead mb-2">
+            Esta acción eliminará al usuario administrador del sistema.
+        </p>
+    </div>
+
+    <div class="alert alert-danger mb-0">
+        <strong>¿Estás seguro?</strong><br>
+        Vas a eliminar al usuario <strong>{{ usuario.username }}</strong>.  
+        Esta acción no se puede deshacer.
+    </div>
+
+    <form method="post" class="mt-3">
+        {% csrf_token %}
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-danger px-4" type="submit">
+                Sí, eliminar
+            </button>
+            <a class="btn btn-outline-light px-4" href="{% url 'admin_user_list' %}">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

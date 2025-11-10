@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Préstamos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="text-accent fw-semibold mb-1">Préstamos registrados</h2>
+        <p class="card-main-lead mb-0">
+            Historial de entregas realizadas por el personal de <span class="text-accent-2">Pañol</span>.
+        </p>
+    </div>
+    <a class="btn btn-success px-4" href="{% url 'registrar_prestamo' %}">
+        ➕ Nuevo préstamo
+    </a>
+</div>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Docente</th>
+            <th scope="col">Pañol</th>
+            <th scope="col">Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for p in prestamos %}
+        <tr>
+            <td class="text-muted">{{ p.fecha|date:"d-m-Y H:i" }}</td>
+            <td class="fw-semibold">{{ p.docente.nombre }}</td>
+            <td>{{ p.panol.username }}</td>
+            <td>
+                {% if p.detalles.all %}
+                    <ul class="mb-0 ps-3">
+                        {% for d in p.detalles.all %}
+                            <li>{{ d.cantidad }} × <span class="text-accent">{{ d.material.nombre }}</span></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <span class="text-muted fst-italic">Sin detalles</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4" class="text-center text-muted py-3">
+                No hay préstamos registrados.
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

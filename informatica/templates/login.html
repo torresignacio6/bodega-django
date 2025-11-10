@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card-main" style="max-width: 400px; width: 100%; background: rgba(15, 23, 42, 0.95); padding: 32px; text-align: center;">
+        <h2 class="text-accent fw-semibold mb-3">Iniciar sesión</h2>
+        <p class="card-main-lead mb-4">
+            Accede al sistema de <span class="text-accent-2">Bodega Informática</span>
+        </p>
+
+        {% if error %}
+            <div class="alert alert-danger py-2">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3 text-start">
+                <label for="id_username" class="form-label">Usuario</label>
+                <input id="id_username" type="text" name="username" class="form-control" placeholder="Ingresa tu usuario" required>
+            </div>
+
+            <div class="mb-4 text-start">
+                <label for="id_password" class="form-label">Contraseña</label>
+                <input id="id_password" type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2" type="submit">
+                🔐 Entrar
+            </button>
+        </form>
+
+        <p class="text-muted mt-4 mb-0" style="font-size: 0.85rem;">
+            © {% now "Y" %} Sistema de Bodega
+        </p>
+    </div>
+</div>
+{% endblock %}

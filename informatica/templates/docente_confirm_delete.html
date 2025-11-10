@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar docente{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3">
+    <div>
+        <h2 class="text-danger fw-semibold mb-2">Eliminar docente</h2>
+        <p class="card-main-lead mb-0">
+            Esta acción eliminará permanentemente el registro del docente.
+        </p>
+    </div>
+
+    <div class="alert alert-danger mt-2">
+        <strong>¿Estás seguro?</strong><br>
+        Vas a eliminar a <strong>{{ docente.nombre }}</strong> ({{ docente.rut }}).  
+        Esta acción <u>no se puede deshacer</u>.
+    </div>
+
+    <form method="post" class="mt-2">
+        {% csrf_token %}
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-danger px-4" type="submit">
+                🗑️ Sí, eliminar
+            </button>
+            <a class="btn btn-outline-light px-4" href="{% url 'docente_list' %}">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

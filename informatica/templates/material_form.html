@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column gap-3">
+    <div>
+        <h2 class="text-accent fw-semibold mb-2">{{ titulo }}</h2>
+        <p class="card-main-lead mb-0">
+            Completa los datos del material y presiona 
+            <span class="text-accent-2">Guardar</span> para registrar o actualizar la información.
+        </p>
+    </div>
+
+    <form method="post" class="mt-2 p-3">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <button class="btn btn-success px-4" type="submit">
+                💾 Guardar
+            </button>
+            <a class="btn btn-outline-light px-4" href="{% url 'material_list' %}">
+                Volver
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
