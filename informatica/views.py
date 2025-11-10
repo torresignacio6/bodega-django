@@ -18,13 +18,16 @@ def login_view(request):
             return render(request, 'login.html', {'error': 'Credenciales inválidas'})
     return render(request, 'login.html')
 
+
 def logout_view(request):
     logout(request)
     return redirect('login')
 
+
 @login_required
 def home(request):
     return render(request, 'home.html')
+
 
 @rol_requerido('ADMIN')
 def docente_list(request):
@@ -64,6 +67,7 @@ def docente_delete(request, pk):
         docente.delete()
         return redirect('docente_list')
     return render(request, 'docente_confirm_delete.html', {'docente': docente})
+
 
 @rol_requerido('ADMIN')
 def material_list(request):
@@ -154,6 +158,7 @@ def admin_user_delete(request, pk):
         return redirect('admin_user_list')
     return render(request, 'admin_user_confirm_delete.html', {'usuario': user})
 
+
 @rol_requerido('ADMIN')
 def panol_user_list(request):
     usuarios = Usuario.objects.filter(rol='PANOL')
@@ -206,6 +211,7 @@ def panol_user_delete(request, pk):
 
 @rol_requerido('PANOL')
 def registrar_prestamo(request):
+    materiales = Material.objects.filter(activo=True)
     mensaje = None
     error = None
 
@@ -219,25 +225,18 @@ def registrar_prestamo(request):
             if material.stock < cantidad:
                 error = f"No hay stock suficiente. Stock actual: {material.stock}."
             else:
-                prestamo = Prestamo.objects.create(
-                    docente=docente,
-                    panol=request.user
-                )
-                DetallePrestamo.objects.create(
-                    prestamo=prestamo,
-                    material=material,
-                    cantidad=cantidad
-                )
-                material.stock -= cantidad 
+                prestamo = Prestamo.objects.create(docente=docente, panol=request.user)
+                DetallePrestamo.objects.create(prestamo=prestamo, material=material, cantidad=cantidad)
+                material.stock -= cantidad
                 material.save()
-
                 mensaje = "Préstamo registrado correctamente."
-                form = PrestamoForm() 
+                form = PrestamoForm()
     else:
         form = PrestamoForm()
 
     return render(request, 'registrar_prestamo.html', {
         'form': form,
+        'materiales': materiales,
         'mensaje': mensaje,
         'error': error,
     })
@@ -253,19 +252,14 @@ def prestamo_list(request):
     )
     return render(request, 'prestamo_list.html', {'prestamos': prestamos})
 
-def registrar_prestamo(request):
-    materiales = Material.objects.filter(activo=True)
-    return render(request, 'registrar_prestamo.html', {'form': form, 'materiales': materiales})
-
 @login_required
 def admin_prestamos_list(request):
     prestamos = Prestamo.objects.all().order_by('-fecha')
     return render(request, 'admin_prestamos_list.html', {'prestamos': prestamos})
+
 
 @login_required
 def admin_prestamo_delete(request, pk):
     prestamo = get_object_or_404(Prestamo, pk=pk)
     prestamo.delete()
     return redirect('admin_prestamos_list')
-
-

@@ -8,7 +8,7 @@
         {% if user.rol == 'ADMIN' %}
             <p class="card-main-lead">
                 Estás en el panel de <span class="text-accent-2">Administración</span>. 
-                Desde aquí gestionas docentes, materiales y usuarios del sistema.
+                Desde aquí gestionas docentes, materiales, usuarios y préstamos del sistema.
             </p>
         {% elif user.rol == 'PANOL' %}
             <p class="card-main-lead">
@@ -34,6 +34,7 @@
 {% if user.rol == 'ADMIN' %}
     <h5 class="mb-2 text-muted">Accesos rápidos</h5>
     <div class="menu-grid">
+
         <a href="{% url 'docente_list' %}" class="tile-btn">
             <div class="tile-icon">👨‍🏫</div>
             <div class="tile-title">Docentes</div>
@@ -61,6 +62,14 @@
             <div class="tile-sub">Controla quién puede registrar préstamos.</div>
             <span class="pill-tag">Usuarios · Pañol</span>
         </a>
+
+        <a href="{% url 'admin_prestamos_list' %}" class="tile-btn">
+            <div class="tile-icon">📦</div>
+            <div class="tile-title">Ver y eliminar préstamos</div>
+            <div class="tile-sub">Consulta o elimina préstamos registrados.</div>
+            <span class="pill-tag">Gestión de préstamos</span>
+        </a>
+
     </div>
 
 {% elif user.rol == 'PANOL' %}
