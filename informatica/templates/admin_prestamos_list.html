@@ -5,43 +5,46 @@
 <div class="card-main">
     <h2 class="text-accent mb-3">Listado de préstamos</h2>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Docente</th>
-                <th>Pañol</th>
-                <th>Fecha</th>
-                <th>Detalles</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in prestamos %}
-            <tr>
-                <td>{{ p.id }}</td>
-                <td>{{ p.docente.nombre }}</td>
-                <td>{{ p.panol.username }}</td>
-                <td>{{ p.fecha|date:"d-m-Y H:i" }}</td>
-                <td>
-                    {% for detalle in p.detalles.all %}
-                        {{ detalle.material.nombre }} ({{ detalle.cantidad }})<br>
-                    {% empty %}
-                        <em>Sin detalles</em>
-                    {% endfor %}
-                </td>
-                <td>
-                    <a href="{% url 'admin_prestamo_delete' p.pk %}" 
-                       class="btn btn-sm btn-danger"
-                       onclick="return confirm('¿Eliminar este préstamo?')">
-                       Eliminar
-                    </a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="6">No hay préstamos registrados.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <table class="table table-hover table-bordered text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Docente</th>
+            <th>Materiales</th>
+            <th>Cantidades</th>
+            <th>Pañol (registrado por)</th>
+            <th>Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for prestamo in prestamos %}
+        <tr>
+            <td>{{ prestamo.id }}</td>
+            <td>{{ prestamo.docente }}</td>
+            <td>
+                {% for detalle in prestamo.detalles.all %}
+                    {{ detalle.material.nombre }}<br>
+                {% endfor %}
+            </td>
+            <td>
+                {% for detalle in prestamo.detalles.all %}
+                    {{ detalle.cantidad }}<br>
+                {% endfor %}
+            </td>
+            <td>{{ prestamo.panol.username }}</td> 
+            <td>{{ prestamo.fecha|date:"d-m-Y H:i" }}</td>
+            <td>
+                <a href="{% url 'admin_prestamo_delete' prestamo.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-muted">No hay préstamos registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 </div>
 {% endblock %}
