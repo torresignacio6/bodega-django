@@ -240,11 +240,13 @@ def registrar_prestamo(request):
 def prestamo_list(request):
     prestamos = (
         Prestamo.objects
+        .filter(panol=request.user)  
         .select_related('docente', 'panol')
         .prefetch_related('detalles__material')
         .order_by('-fecha')
     )
     return render(request, 'prestamo_list.html', {'prestamos': prestamos})
+
 
 
 @login_required
