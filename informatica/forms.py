@@ -13,6 +13,12 @@ class MaterialForm(forms.ModelForm):
 
 
 class UsuarioForm(forms.ModelForm):
+    email = forms.EmailField(
+        label="Correo electrónico",
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+
     password = forms.CharField(
         label="Contraseña",
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
@@ -21,7 +27,7 @@ class UsuarioForm(forms.ModelForm):
 
     class Meta:
         model = Usuario
-        fields = ['username', 'first_name', 'last_name', 'password', 'rol']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password', 'rol']
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -29,6 +35,7 @@ class UsuarioForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
 
 class PrestamoForm(forms.Form):
     docente = forms.ModelChoiceField(
